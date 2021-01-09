@@ -1,0 +1,43 @@
+version: '3.5'
+
+volumes: 
+  db:
+  images:
+  config:
+
+services:
+  db:
+    image: mariadb
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=mediawiki
+      - MYSQL_USER=mediawiki
+      - MYSQL_PASSWORD=secret  
+    logging:
+      options:
+        max-size: 50m
+
+  web:
+    build: ./
+    ports:
+      - "8081:80"
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=mediawiki
+      - MYSQL_USER=mediawiki
+      - MYSQL_PASSWORD=secret
+      - MEDIAWIKI_LANG=en
+      - MEDIAWIKI_ADMIN_USERNAME=admin
+      - MEDIAWIKI_ADMIN_PASSWORD=secret
+      - MEDIAWIKI_NAME=Testwiki
+    volumes:
+      - images:/var/www/html/images
+      - config:/var/www/html/config
+    depends_on:
+      - db
+    logging:
+      options:
+        max-size: 50m
