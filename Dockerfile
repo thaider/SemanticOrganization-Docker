@@ -1,4 +1,4 @@
-FROM mediawiki:1.31
+FROM mediawiki:1.35
 
 RUN apt-get update && \
     apt-get install -y nano gettext-base wget zip unzip libzip-dev zlib1g-dev && \
@@ -10,7 +10,7 @@ WORKDIR /var/www/html
 
 RUN git clone https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
-    && git clone https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization
+    && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization
 
 WORKDIR /var/www/html/extensions/PageForms
 RUN git checkout 397dfbb
