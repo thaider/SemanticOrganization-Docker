@@ -13,11 +13,17 @@ $wgPFEnableStringFunctions = true; # Enable String Functions
 # Enable Semantic MediaWiki
 enableSemantics('localhost');
 $smwgEnabledEditPageHelp = false;
-$smwgLinksInValues = true;
+$smwgParserFeatures = $smwgParserFeatures | SMW_PARSER_LINV;
 
 # Load Page Forms extension
 wfLoadExtension('PageForms');
 $wgPageFormsAutocompleteOnAllChars = true;
+
+# Load Semantic Result Formats extension
+wfLoadExtension( 'SemanticResultFormats' );
+
+# Load Replace Text extension
+wfLoadExtension( 'ReplaceText' );
 
 # Load Semantic Organization extension
 wfLoadExtension('SemanticOrganization');
