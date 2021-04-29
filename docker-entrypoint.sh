@@ -31,6 +31,7 @@ fi
 
 if [ ! -e $CONTAINER_1_35 ]; then
 
+    echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> config/LocalSettings.php
     cp -a config/LocalSettings.php ./ 
 
     echo "UPDATE LOCALSETTINGS.PHP..."
