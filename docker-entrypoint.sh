@@ -12,14 +12,6 @@ if [ ! -e $CONTAINER_INSTALLED ]; then
     echo "SETUP (SEMANTIC-)MEDIAWIKI..."
     php maintenance/install.php --dbserver=$MYSQL_HOST --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --scriptpath="" --lang=$MEDIAWIKI_LANG --pass=$MEDIAWIKI_ADMIN_PASSWORD "$MEDIAWIKI_NAME" "$MEDIAWIKI_ADMIN_USERNAME"
 
-    echo "ADD TO LOCALSETTINGS.PHP..."
-    echo " " >> LocalSettings.php
-    echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> LocalSettings.php
-
-    echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php
-
-    echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php  
-
     echo "SAVE LOCALSETTINGS.PHP"
     cp -a LocalSettings.php config/
 
@@ -28,16 +20,14 @@ if [ ! -e $CONTAINER_INSTALLED ]; then
 
 fi
 
+echo "RESET/UPDATE LOCALSETTINGS.PHP"
+cp -a config/LocalSettings.php ./ 
+echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> LocalSettings.php
+echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php
+echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php  
+cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php 
+
 if [ ! -e $CONTAINER_1_35 ]; then
-
-    echo "ADD $WGSERVER TO LOCALSETTINGS.PHP..."
-    echo " " >> config/LocalSettings.php
-    echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> config/LocalSettings.php
-    
-    cp -a config/LocalSettings.php ./ 
-
-    echo "UPDATE LOCALSETTINGS.PHP..."
-    cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php
 
     php maintenance/populateContentTables.php
     php maintenance/update.php --quick
@@ -56,11 +46,6 @@ if [ ! -e $CONTAINER_1_35 ]; then
 fi
 
 if [ ! -e $CONTAINER_UPDATED ]; then
-
-    cp -a config/LocalSettings.php ./ 
-
-    echo "UPDATE LOCALSETTINGS.PHP..."
-    cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php 
 
     php maintenance/update.php --quick
 
