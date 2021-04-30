@@ -31,7 +31,7 @@ services:
       - MYSQL_PASSWORD=secret
       - MEDIAWIKI_LANG=en
       - MEDIAWIKI_ADMIN_USERNAME=admin
-      - MEDIAWIKI_ADMIN_PASSWORD=secret
+      - MEDIAWIKI_ADMIN_PASSWORD=secretpassword
       - MEDIAWIKI_NAME=Testwiki
       - MEDIAWIKI_SERVER=http://localhost:8081
     volumes:

@@ -12,26 +12,26 @@ if [ ! -e $CONTAINER_INSTALLED ]; then
     echo "SETUP (SEMANTIC-)MEDIAWIKI..."
     php maintenance/install.php --dbserver=$MYSQL_HOST --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --scriptpath="" --lang=$MEDIAWIKI_LANG --pass=$MEDIAWIKI_ADMIN_PASSWORD "$MEDIAWIKI_NAME" "$MEDIAWIKI_ADMIN_USERNAME"
 
+    echo "ADD TO LOCALSETTINGS.PHP..."
     echo " " >> LocalSettings.php
     echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> LocalSettings.php
 
-    echo " " >> LocalSettings.php
-    echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php    
-
-    echo "UPDATE LOCALSETTINGS.PHP..."
-    cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php
+    echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php
 
     echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php  
 
+    echo "SAVE LOCALSETTINGS.PHP"
     cp -a LocalSettings.php config/
 
+    touch $CONTAINER_1_35
     touch $CONTAINER_INSTALLED
 
 fi
 
 if [ ! -e $CONTAINER_1_35 ]; then
 
-    echo " " >> LocalSettings.php
+    echo "ADD $WGSERVER TO LOCALSETTINGS.PHP..."
+    echo " " >> config/LocalSettings.php
     echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> config/LocalSettings.php
     
     cp -a config/LocalSettings.php ./ 
@@ -43,9 +43,6 @@ if [ ! -e $CONTAINER_1_35 ]; then
     php maintenance/update.php --quick
     php extensions/SemanticMediaWiki/maintenance/updateEntityCountMap.php
     php extensions/SemanticMediaWiki/maintenance/rebuildData.php -v --with-maintenance-log
-
-    echo "IMPORTING SEMORG PAGES..."
-    php maintenance/importDump.php < extensions/SemanticOrganization/import/semorg_pages.xml
 
     echo "CHANGED BEHAVIOUR OF NAMED ARGS"
     set +e # replaceAll.php throws an error if there is nothing to replace
@@ -75,6 +72,7 @@ if [ ! -e $CONTAINER_UPDATED ]; then
     php maintenance/runJobs.php
 
     touch $CONTAINER_UPDATED
+
 fi
 
 echo "STARTUP WEB SERVER..."
