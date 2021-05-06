@@ -1,6 +1,22 @@
 <?php
 
+# Enable File Uploads
 $wgEnableUploads = true; 
+$wgFileExtensions = array_merge( $wgFileExtensions, array( 
+	'pdf', 
+	'ppt', 
+	'pptx',
+	'xls', 
+	'xlsx', 
+	'doc', 
+	'docx', 
+	'odt', 
+	'ods',
+	'odc', 
+	'odp', 
+	'odg', 
+	'svg' 
+) );
 
 $wgDefaultSkin = "tweeki";
 $wgDefaultUserOptions['tweeki-advanced'] = 1; # Show Tweeki's advanced features by default
@@ -11,13 +27,20 @@ wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true; # Enable String Functions
 
 # Enable Semantic MediaWiki
-enableSemantics('localhost');
+enableSemantics();
 $smwgEnabledEditPageHelp = false;
+$smwgPageSpecialProperties[] = '_CDAT';
 $smwgLinksInValues = true;
 
 # Load Page Forms extension
 wfLoadExtension('PageForms');
 $wgPageFormsAutocompleteOnAllChars = true;
+
+# Load Replace Text extension
+wfLoadExtension( 'ReplaceText' );
+
+# Load SyntaxHighlight_GeSHi extension
+wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 
 # Load Semantic Organization extension
 wfLoadExtension('SemanticOrganization');
@@ -29,6 +52,7 @@ $wgRestrictDisplayTitle = false;
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['*']['read'] = false;
 $wgGroupPermissions['*']['edit'] = false;
+$wgGroupPermissions['user']['delete'] = true;
 
 # Clean up navigation
 $wgTweekiSkinHideAnon['navbar'] = true; 
@@ -42,6 +66,6 @@ $wgTweekiSkinHideAll['footer-icons'] = true;
 $wgMaxCredits = 1;
 
 # Increase Job Run Rate, to speed up assignation of categories/forms to pages
-$wgJobRunRate = 100;
+$wgJobRunRate = 10;
 
 error_reporting(E_ERROR | E_PARSE);
