@@ -7,11 +7,9 @@ RUN apt-get update && \
     docker-php-ext-install zip
 
 WORKDIR /var/www/html
-RUN rm -r /var/www/html/extensions/ReplaceText
 
 RUN git clone https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
-    && git clone -b REL1_35 https://gerrit.wikimedia.org/r/mediawiki/extensions/ReplaceText.git /var/www/html/extensions/ReplaceText \
     && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization
 
 WORKDIR /var/www/html/extensions/PageForms
