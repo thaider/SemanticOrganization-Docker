@@ -33,6 +33,7 @@ services:
       - MEDIAWIKI_ADMIN_USERNAME=admin
       - MEDIAWIKI_ADMIN_PASSWORD=secret
       - MEDIAWIKI_NAME=Testwiki
+      - MEDIAWIKI_SERVER=http://localhost:8081
       - MEDIAWIKI_DEBUG=false
     volumes:
       - images:/var/www/html/images
