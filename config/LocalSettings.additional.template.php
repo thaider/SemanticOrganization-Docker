@@ -1,22 +1,22 @@
 <?php
 
 # Enable File Uploads
-$wgEnableUploads = true; 
-$wgFileExtensions = array_merge( $wgFileExtensions, array( 
-	'pdf', 
-	'ppt', 
+$wgEnableUploads = true;
+$wgFileExtensions = array_merge( $wgFileExtensions, [ 
+	'pdf',
+	'ppt',
 	'pptx',
-	'xls', 
-	'xlsx', 
-	'doc', 
-	'docx', 
-	'odt', 
+	'xls',
+	'xlsx',
+	'doc',
+	'docx',
+	'odt',
 	'ods',
-	'odc', 
-	'odp', 
-	'odg', 
-	'svg' 
-) );
+	'odc',
+	'odp',
+	'odg',
+	'svg'
+] );
 
 $wgDefaultSkin = "tweeki";
 $wgDefaultUserOptions['tweeki-advanced'] = 1; # Show Tweeki's advanced features by default
@@ -59,11 +59,11 @@ $wgGroupPermissions['user']['delete'] = true;
 
 
 # Clean up navigation
-$wgTweekiSkinHideAnon['navbar'] = true; 
-$wgTweekiSkinHideAnon['footer'] = true; 
-$wgTweekiSkinHideAll['footer-info'] = false; 
-$wgTweekiSkinHideAll['footer-places'] = true; 
-$wgTweekiSkinHideAll['footer-info-copyright'] = true; 
+$wgTweekiSkinHideAnon['navbar'] = true;
+$wgTweekiSkinHideAnon['footer'] = true;
+$wgTweekiSkinHideAll['footer-info'] = false;
+$wgTweekiSkinHideAll['footer-places'] = true;
+$wgTweekiSkinHideAll['footer-info-copyright'] = true;
 $wgTweekiSkinHideAll['footer-icons'] = true;
 
 # Show only latest editor in footer
