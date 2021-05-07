@@ -27,6 +27,14 @@ echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php
 echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php  
 cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php 
 
+if [ $MEDIAWIKI_DEBUG == 'true' ]; then
+    
+    echo "ENABLE DEBUG MODE..."
+    echo "\$wgShowExceptionDetails = true;" >> LocalSettings.php 
+    echo "\$wgShowDBErrorBacktrace = true;" >> LocalSettings.php 
+
+fi
+
 if [ ! -e $CONTAINER_1_35 ]; then
 
     php maintenance/populateContentTables.php
@@ -47,6 +55,7 @@ fi
 
 if [ ! -e $CONTAINER_UPDATED ]; then
 
+    echo "RUN MEDIAWIKI UPDATE SCRIPT..."
     php maintenance/update.php --quick
 
     echo "IMPORTING SEMORG PAGES..."
