@@ -65,7 +65,7 @@ if [ ! -e $CONTAINER_1_35 ]; then
 
     echo "CHANGED BEHAVIOUR OF NAMED ARGS"
     set +e # replaceAll.php throws an error if there is nothing to replace
-    php extensions/ReplaceText/maintenance/replaceAll.php "{{{?" "{{{" --yes
+    php extensions/ReplaceText/maintenance/replaceAll.php "{{{?" "{{{" --yes --nsall
     set -e
 
     php maintenance/runJobs.php
