@@ -6,6 +6,7 @@ cd /var/www/html
 CONTAINER_UPDATED="UPDATED"
 CONTAINER_INSTALLED="config/INSTALLED"
 CONTAINER_1_35="config/1_35"
+EXTENSIONS="config/EXTENSIONS"
 
 if [ ! -e $CONTAINER_INSTALLED ]; then
 
@@ -22,10 +23,30 @@ fi
 
 echo "RESET/UPDATE LOCALSETTINGS.PHP"
 cp -a config/LocalSettings.php ./ 
+cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php 
 echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> LocalSettings.php
 echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php
+
+if [ -e $EXTENSIONS ]; then
+
+    IFS='|'
+    while read -r EXTENSION_NAME EXTENSION_URL
+    do
+        echo "INSTALLING EXTENSION \"$EXTENSION_NAME\""
+
+        if [ ! -e "/var/www/html/extensions/$EXTENSION_NAME" ]; then
+
+            git clone $EXTENSION_URL /var/www/html/extensions/$EXTENSION_NAME
+
+        fi
+
+        echo "wfLoadExtension( '$EXTENSION_NAME' );" >> LocalSettings.php
+
+    done < "$EXTENSIONS"
+
+fi
+
 echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php  
-cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php 
 
 if [ $MEDIAWIKI_DEBUG == 'true' ]; then
     
