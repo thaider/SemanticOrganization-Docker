@@ -1,4 +1,6 @@
 <?php
+# Short URL
+$wgArticlePath = "/wiki/$1";
 
 # Enable File Uploads
 $wgEnableUploads = true;
