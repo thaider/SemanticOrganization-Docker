@@ -63,9 +63,10 @@ if [ ! -e $CONTAINER_1_35 ]; then
     php extensions/SemanticMediaWiki/maintenance/updateEntityCountMap.php
     php extensions/SemanticMediaWiki/maintenance/rebuildData.php -v --with-maintenance-log
 
-    echo "CHANGED BEHAVIOUR OF NAMED ARGS"
+    echo "CHANGED BEHAVIOUR OF NAMED ARGS AND USERPARAM"
     set +e # replaceAll.php throws an error if there is nothing to replace
     php extensions/ReplaceText/maintenance/replaceAll.php "{{{?" "{{{" --yes --nsall
+    php extensions/ReplaceText/maintenance/replaceAll.php "{{{userparam" "{{{#userparam" --yes --nsall
     set -e
 
     php maintenance/runJobs.php
