@@ -4,7 +4,7 @@ $wgArticlePath = "/wiki/$1";
 
 # Enable File Uploads
 $wgEnableUploads = true;
-$wgFileExtensions = array_merge( $wgFileExtensions, [ 
+$wgFileExtensions = array_merge( $wgFileExtensions, [
 	'pdf',
 	'ppt',
 	'pptx',
@@ -58,7 +58,6 @@ $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['*']['read'] = false;
 $wgGroupPermissions['*']['edit'] = false;
 $wgGroupPermissions['user']['delete'] = true;
-
 
 # Clean up navigation
 $wgTweekiSkinHideAnon['navbar'] = true;

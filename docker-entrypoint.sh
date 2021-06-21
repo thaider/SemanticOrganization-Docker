@@ -22,12 +22,12 @@ if [ ! -e $CONTAINER_INSTALLED ]; then
 fi
 
 echo "RESET/UPDATE LOCALSETTINGS.PHP"
-cp -a config/LocalSettings.php ./ 
-cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php 
+cp -a config/LocalSettings.php ./
+cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php
 echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> LocalSettings.php
 echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php
 
-if [ -e $EXTENSIONS ]; then
+if [ ! $MEDIAWIKI_EXTENSIONS == 'false' && -e $EXTENSIONS ]; then
 
     IFS='|'
     while read -r EXTENSION_NAME EXTENSION_URL
@@ -36,7 +36,7 @@ if [ -e $EXTENSIONS ]; then
 
         if [ ! -e "/var/www/html/extensions/$EXTENSION_NAME" ]; then
 
-            git clone $EXTENSION_URL /var/www/html/extensions/$EXTENSION_NAME
+            git clone -b REL1_35 $EXTENSION_URL /var/www/html/extensions/$EXTENSION_NAME
 
         fi
 
@@ -46,18 +46,19 @@ if [ -e $EXTENSIONS ]; then
 
 fi
 
-echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php  
+echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php
 
 if [ $MEDIAWIKI_DEBUG == 'true' ]; then
-    
+
     echo "ENABLE DEBUG MODE..."
-    echo "\$wgShowExceptionDetails = true;" >> LocalSettings.php 
-    echo "\$wgShowDBErrorBacktrace = true;" >> LocalSettings.php 
+    echo "\$wgShowExceptionDetails = true;" >> LocalSettings.php
+    echo "\$wgShowDBErrorBacktrace = true;" >> LocalSettings.php
 
 fi
 
 if [ ! -e $CONTAINER_1_35 ]; then
 
+    echo "UPDATE TO MEDIAWIKI 1.35"
     php maintenance/populateContentTables.php
     php maintenance/update.php --quick
     php extensions/SemanticMediaWiki/maintenance/updateEntityCountMap.php
