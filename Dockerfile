@@ -20,7 +20,7 @@ WORKDIR /var/www/html
 ADD composer.local.json ./
 
 RUN wget https://getcomposer.org/composer-1.phar
-RUN php composer-1.phar update --no-dev
+RUN php composer-1.phar update --no-dev -o
 
 RUN mkdir ./templates
 
