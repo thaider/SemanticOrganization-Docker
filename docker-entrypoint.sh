@@ -27,7 +27,7 @@ cp templates/config/LocalSettings.additional.template.php LocalSettings.addition
 echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> LocalSettings.php
 echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php
 
-if [ ! $MEDIAWIKI_EXTENSIONS == 'false' ] && [ -e $EXTENSIONS ]; then
+if [ ! ${MEDIAWIKI_EXTENSIONS:-true} == 'false' ] && [ -e $EXTENSIONS ]; then
 
     IFS='|'
     while read -r EXTENSION_NAME EXTENSION_URL
