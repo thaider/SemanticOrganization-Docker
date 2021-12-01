@@ -1,16 +1,34 @@
 FROM mediawiki:1.35
 
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+
 RUN apt-get update && \
-    apt-get install -y nano gettext-base wget zip unzip libzip-dev zlib1g-dev && \
+    apt-get install -y \
+        vim \
+        gettext-base \
+        wget \
+        zip \
+        unzip \
+        libzip-dev \
+        zlib1g-dev \
+        nodejs \
+        automysqlbackup \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        netcat && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-install zip
+    docker-php-ext-install zip && \
+    docker-php-ext-configure gd --with-freetype-dir --with-jpeg-dir && \
+    docker-php-ext-install -j$(nproc) gd
 
 WORKDIR /var/www/html
 
 RUN git clone https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
-    && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization
+    && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization \
+    && git clone https://github.com/redekopmark/MediaWiki-pChart4mw /var/www/html/extensions/pChart4mw
 
 WORKDIR /var/www/html/extensions/PageForms
 RUN git checkout 731d226

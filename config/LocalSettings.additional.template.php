@@ -34,6 +34,11 @@ $smwgEnabledEditPageHelp = false;
 $smwgPageSpecialProperties[] = '_CDAT';
 $smwgParserFeatures = $smwgParserFeatures | SMW_PARSER_LINV;
 
+# disable prefetch lookup feature while the fix for
+# https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues/4988
+# isn't released (to be expected for SMW 3.2.4)
+$smwgExperimentalFeatures = SMW_SHOWPARSER_USE_CURTAILMENT;
+
 # Load Page Forms extension
 wfLoadExtension('PageForms');
 $wgPageFormsAutocompleteOnAllChars = true;
@@ -49,6 +54,9 @@ wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 
 # Load Semantic Organization extension
 wfLoadExtension('SemanticOrganization');
+
+# Load pChart4mw extension
+wfLoadExtension('pChart4mw');
 
 # Allow display titles for automatically created page names
 $wgRestrictDisplayTitle = false;

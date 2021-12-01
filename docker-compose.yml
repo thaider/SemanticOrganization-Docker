@@ -4,6 +4,8 @@ volumes:
   db:
   images:
   config:
+  custom:
+  dumps:
 
 services:
   db:
@@ -34,9 +36,13 @@ services:
       - MEDIAWIKI_ADMIN_PASSWORD=secretpassword
       - MEDIAWIKI_NAME=Testwiki
       - MEDIAWIKI_SERVER=http://localhost:8081
+      - MEDIAWIKI_CUSTOM=true
     volumes:
       - images:/var/www/html/images
       - config:/var/www/html/config
+      - custom:/var/www/html/extensions/SemanticOrganization/resources/custom
+      - .htaccess:/var/www/html/.htaccess:ro
+      - ./dumps:/dumps
     depends_on:
       - db
     logging:

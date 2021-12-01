@@ -1,6 +1,22 @@
 #!/bin/bash
 set -e
 
+echo "CHECKING DB CONNECTION ..."
+i=0
+until [ $i -ge 10 ]; do
+    nc -z db 3306 && break
+
+    i=$(( i + 1 ))
+
+    echo "$i: WAITING FOR DB 1 SECOND ..."
+    sleep 1
+done
+if [ $i -eq 10 ]; then
+    echo "DB CONNECTION REFUSED, TERMINATING ..."
+    exit 1
+fi
+echo "DB IS UP ..."
+
 cd /var/www/html
 
 CONTAINER_UPDATED="UPDATED"
@@ -48,11 +64,29 @@ fi
 
 echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php
 
-if [ $MEDIAWIKI_DEBUG == 'true' ]; then
+if [ "$MEDIAWIKI_DEBUG" == 'true' ]; then
 
     echo "ENABLE DEBUG MODE..."
     echo "\$wgShowExceptionDetails = true;" >> LocalSettings.php
     echo "\$wgShowDBErrorBacktrace = true;" >> LocalSettings.php
+
+fi
+
+if [ "$MEDIAWIKI_CUSTOM" == 'true' ]; then
+
+    echo "CREATE CUSTOM STYLES"
+    cd /var/www/html/extensions/SemanticOrganization
+    npm install
+
+    if [ ! -e resources/custom/styles/custom.scss ]; then
+
+        cp resources/custom/styles/example.custom.scss resources/custom/styles/custom.scss
+
+    fi
+
+    npm run prod
+    cd /var/www/html
+    echo "\$wgSemorgUseCustomStyles = true;" >> LocalSettings.php
 
 fi
 
@@ -87,6 +121,12 @@ if [ ! -e $CONTAINER_UPDATED ]; then
     echo "CLEANUP AFTER IMPORT..."
     php maintenance/rebuildrecentchanges.php
     php maintenance/runJobs.php
+
+    echo "SETUP AUTOMYSQLBACKUP"
+    echo "USERNAME=$MYSQL_USER" >> /etc/default/automysqlbackup
+    echo "PASSWORD=$MYSQL_PASSWORD" >> /etc/default/automysqlbackup
+    sed -i "s/DBNAMES=.*/DBNAMES=mediawiki/" /etc/default/automysqlbackup
+    sed -i "s/BACKUPDIR=.*/BACKUPDIR=\"\/dumps\"/" /etc/default/automysqlbackup
 
     touch $CONTAINER_UPDATED
 
