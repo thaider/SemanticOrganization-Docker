@@ -8,8 +8,8 @@ until [ $i -ge 10 ]; do
 
     i=$(( i + 1 ))
 
-    echo "$i: WAITING FOR DB 1 SECOND ..."
-    sleep 1
+    echo "$i: WAITING FOR DB 5 SECONDS ..."
+    sleep 5
 done
 if [ $i -eq 10 ]; then
     echo "DB CONNECTION REFUSED, TERMINATING ..."

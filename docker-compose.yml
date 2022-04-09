@@ -5,7 +5,6 @@ volumes:
   images:
   config:
   custom:
-  dumps:
 
 services:
   db:

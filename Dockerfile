@@ -36,6 +36,7 @@ RUN git checkout 731d226
 WORKDIR /var/www/html
 
 ADD composer.local.json ./
+ADD robots.txt ./
 
 RUN wget https://getcomposer.org/composer-1.phar
 RUN php composer-1.phar update --no-dev -o

@@ -61,6 +61,10 @@ wfLoadExtension('pChart4mw');
 # Allow display titles for automatically created page names
 $wgRestrictDisplayTitle = false;
 
+# Encode section IDs with modern html5 style so Scrollspy works with special chars
+# becomes obsolete with MW 1.37
+$wgFragmentMode = [ 'html5', 'legacy' ];
+
 # Make Wiki private
 $wgGroupPermissions['*']['createaccount'] = false;
 $wgGroupPermissions['*']['read'] = false;
