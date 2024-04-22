@@ -29,7 +29,7 @@ RUN apt-get update && \
 WORKDIR /var/www/html
 
 # install skin and required extensions
-RUN git clone https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
+RUN git clone -b REL1_35 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
     && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization
 
