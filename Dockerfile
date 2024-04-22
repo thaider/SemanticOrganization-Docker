@@ -13,22 +13,17 @@ RUN apt-get update && \
         zlib1g-dev \
         nodejs \
         automysqlbackup \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng-dev \
         netcat && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-install zip && \
-    docker-php-ext-configure gd --with-freetype-dir --with-jpeg-dir && \
-    docker-php-ext-install -j$(nproc) gd
+    docker-php-ext-install calendar
 
 WORKDIR /var/www/html
 
 RUN git clone https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
-    && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization \
-    && git clone https://github.com/redekopmark/MediaWiki-pChart4mw /var/www/html/extensions/pChart4mw
+    && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization
 
 WORKDIR /var/www/html/extensions/PageForms
 RUN git checkout 731d226
@@ -38,8 +33,9 @@ WORKDIR /var/www/html
 ADD composer.local.json ./
 ADD robots.txt ./
 
-RUN wget https://getcomposer.org/composer-1.phar
-RUN php composer-1.phar update --no-dev -o
+RUN wget https://getcomposer.org/composer.phar
+RUN php composer.phar config --no-plugins allow-plugins.composer/installers true
+RUN php composer.phar update --no-dev -o
 
 RUN mkdir ./templates
 

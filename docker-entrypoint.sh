@@ -48,11 +48,37 @@ if [ ! ${MEDIAWIKI_EXTENSIONS:-true} == 'false' ] && [ -e $EXTENSIONS ]; then
     IFS='|'
     while read -r EXTENSION_NAME EXTENSION_URL
     do
-        echo "INSTALLING EXTENSION \"$EXTENSION_NAME\""
 
         if [ ! -e "/var/www/html/extensions/$EXTENSION_NAME" ]; then
 
-            git clone -b REL1_35 $EXTENSION_URL /var/www/html/extensions/$EXTENSION_NAME
+            echo "INSTALLING EXTENSION \"$EXTENSION_NAME\""
+            if [ "$EXTENSION_URL" == '' ]; then
+
+                echo "NO URL PROVIDED, ASSUMING GERRIT REPO";
+                EXTENSION_URL="https://gerrit.wikimedia.org/r/mediawiki/extensions/$EXTENSION_NAME";
+
+            fi
+            git clone $EXTENSION_URL /var/www/html/extensions/$EXTENSION_NAME
+
+            cd /var/www/html/extensions/$EXTENSION_NAME
+
+            BRANCH_EXISTS=$(git ls-remote --heads origin REL1_35)
+
+            if [ ! -z ${BRANCH_EXISTS} ]; then
+
+                echo "CHECK OUT REL1_35"
+                git checkout REL1_35
+
+            fi
+
+            cd /var/www/html
+
+        else 
+
+            echo "UPDATING EXTENSION \"$EXTENSION_NAME\""
+            cd /var/www/html/extensions/$EXTENSION_NAME
+            git pull
+            cd /var/www/html
 
         fi
 

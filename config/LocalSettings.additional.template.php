@@ -55,9 +55,6 @@ wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 # Load Semantic Organization extension
 wfLoadExtension('SemanticOrganization');
 
-# Load pChart4mw extension
-wfLoadExtension('pChart4mw');
-
 # Allow display titles for automatically created page names
 $wgRestrictDisplayTitle = false;
 
