@@ -28,7 +28,7 @@ ELASTIC_INDEX="config/ELASTIC_INDEX"
 if [ ! -e $CONTAINER_INSTALLED ]; then
 
     echo "SETUP (SEMANTIC-)MEDIAWIKI..."
-    php maintenance/install.php --dbserver=$MYSQL_HOST --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --scriptpath="" --lang=$MEDIAWIKI_LANG --pass=$MEDIAWIKI_ADMIN_PASSWORD "$MEDIAWIKI_NAME" "$MEDIAWIKI_ADMIN_USERNAME"
+    php maintenance/install.php --dbserver=$MYSQL_HOST --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --scriptpath="" --lang=$MEDIAWIKI_LANG --pass=$MEDIAWIKI_ADMIN_PASSWORD "$MEDIAWIKI_NAME" "$MEDIAWIKI_ADMIN_USERNAME" --skins=Tweeki
 
     echo "SAVE LOCALSETTINGS.PHP"
     cp -a LocalSettings.php config/
