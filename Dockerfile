@@ -1,4 +1,4 @@
-FROM mediawiki:1.35.7
+FROM mediawiki:1.39
 
 # run setup as root user
 USER root
@@ -19,12 +19,10 @@ RUN apt-get update && \
         libzip-dev \
         zlib1g-dev \
         nodejs \
-        automysqlbackup \
-        netcat && \
+        automysqlbackup && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-install zip && \
-    docker-php-ext-install calendar
+    docker-php-ext-install zip calendar
 
 # install composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -32,16 +30,16 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # install skin and required extensions
-RUN git clone -b REL1_35 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
+RUN git clone -b REL1_39 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
-    && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization \
-    && git clone -b REL1_35 https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica.git /var/www/html/extensions/Elastica \
-    && git clone -b REL1_35 https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch.git /var/www/html/extensions/CirrusSearch \
-    && git clone -b REL1_35 https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll.git /var/www/html/extensions/VEForAll
+    && git clone -b REL1_39 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization \
+    && git clone -b REL1_39 https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica.git /var/www/html/extensions/Elastica \
+    && git clone -b REL1_39 https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch.git /var/www/html/extensions/CirrusSearch \
+    && git clone -b REL1_39 https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll.git /var/www/html/extensions/VEForAll
 
 # change to version of PageForms that is known to be working with semorg's setup
 WORKDIR /var/www/html/extensions/PageForms
-RUN git checkout 731d226
+# RUN git checkout 731d226
 
 # install PHP dependencies for Elastica extension
 WORKDIR /var/www/html/extensions/Elastica

@@ -1,27 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "CHECKING DB CONNECTION ..."
-i=0
-until [ $i -ge 10 ]; do
-    nc -z db 3306 && break
-
-    i=$(( i + 1 ))
-
-    echo "$i: WAITING FOR DB 5 SECONDS ..."
-    sleep 5
-done
-if [ $i -eq 10 ]; then
-    echo "DB CONNECTION REFUSED, TERMINATING ..."
-    exit 1
-fi
-echo "DB IS UP ..."
-
 cd /var/www/html
 
 CONTAINER_UPDATED="UPDATED"
 CONTAINER_INSTALLED="config/INSTALLED"
-CONTAINER_1_35="config/1_35"
+CONTAINER_1_39="config/1_39"
 EXTENSIONS="config/EXTENSIONS"
 ELASTIC_INDEX="config/ELASTIC_INDEX"
 
@@ -33,7 +17,7 @@ if [ ! -e $CONTAINER_INSTALLED ]; then
     echo "SAVE LOCALSETTINGS.PHP"
     cp -a LocalSettings.php config/
 
-    touch $CONTAINER_1_35
+    touch $CONTAINER_1_39
     touch $CONTAINER_INSTALLED
 
 fi
@@ -71,12 +55,12 @@ if [ ! ${MEDIAWIKI_EXTENSIONS:-true} == 'false' ] && [ -e $EXTENSIONS ]; then
 
             cd /var/www/html/extensions/$EXTENSION_NAME
 
-            BRANCH_EXISTS=$(git ls-remote --heads origin REL1_35)
+            BRANCH_EXISTS=$(git ls-remote --heads origin REL1_39)
 
             if [ ! -z ${BRANCH_EXISTS} ]; then
 
-                echo "CHECK OUT REL1_35"
-                git checkout REL1_35
+                echo "CHECK OUT REL1_39"
+                git checkout REL1_39
 
             fi
 
@@ -117,23 +101,13 @@ if [ "$MEDIAWIKI_CUSTOM" == 'true' ]; then
 
 fi
 
-if [ ! -e $CONTAINER_1_35 ]; then
+if [ ! -e $CONTAINER_1_39 ]; then
 
-    echo "UPDATE TO MEDIAWIKI 1.35"
-    php maintenance/populateContentTables.php
+    echo "UPDATE TO MEDIAWIKI 1.39"
     php maintenance/update.php --quick
-    php extensions/SemanticMediaWiki/maintenance/updateEntityCountMap.php
-    php extensions/SemanticMediaWiki/maintenance/rebuildData.php -v --with-maintenance-log
-
-    echo "CHANGED BEHAVIOUR OF NAMED ARGS AND USERPARAM"
-    set +e # replaceAll.php throws an error if there is nothing to replace
-    php extensions/ReplaceText/maintenance/replaceAll.php "{{{?" "{{{" --yes --nsall
-    php extensions/ReplaceText/maintenance/replaceAll.php "{{{userparam" "{{{#userparam" --yes --nsall
-    set -e
-
     php maintenance/runJobs.php
 
-    touch $CONTAINER_1_35
+    touch $CONTAINER_1_39
 
 fi
 

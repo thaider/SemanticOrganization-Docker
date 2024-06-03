@@ -21,6 +21,18 @@ services:
     logging:
       options:
         max-size: 50m
+    healthcheck:
+      interval: 3s
+      retries: 5
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized"
+        ]
+      timeout: 30s
 
   semorg:
     build: ./
@@ -31,7 +43,7 @@ services:
       - MYSQL_DATABASE=mediawiki
       - MYSQL_USER=mediawiki
       - MYSQL_PASSWORD=secret
-      - MEDIAWIKI_LANG=en
+      - MEDIAWIKI_LANG=de
       - MEDIAWIKI_ADMIN_USERNAME=admin
       - MEDIAWIKI_ADMIN_PASSWORD=secretpassword
       - MEDIAWIKI_NAME=Testwiki
@@ -46,17 +58,20 @@ services:
       - .htaccess:/var/www/html/.htaccess:ro
       - ./dumps:/dumps
     depends_on:
-      - db
-      - elastic
+      db:
+        condition: service_healthy
+      elastic:
+        condition: service_started
     logging:
       options:
         max-size: 50m
 
   elastic:
-    image: elasticsearch:6.8.23
+    image: elasticsearch:7.17.21
     restart: always
     environment:
       - bootstrap.memory_lock=true
+      - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:

@@ -35,6 +35,7 @@ wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true; # Enable String Functions
 
 # Enable Semantic MediaWiki
+wfLoadExtension( 'SemanticMediaWiki' );
 enableSemantics();
 $smwgEnabledEditPageHelp = false;
 $smwgPageSpecialProperties[] = '_CDAT';
