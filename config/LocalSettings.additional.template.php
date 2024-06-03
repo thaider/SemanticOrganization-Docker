@@ -1,4 +1,10 @@
 <?php
+# Debug Mode
+if( isset( $wgDebug ) && $wgDebug ) {
+	$wgShowExceptionDetails = true;
+	$wgDebugToolbar = true;
+}
+
 # Short URL
 $wgArticlePath = "/wiki/$1";
 
@@ -40,7 +46,7 @@ $smwgParserFeatures = $smwgParserFeatures | SMW_PARSER_LINV;
 $smwgExperimentalFeatures = SMW_SHOWPARSER_USE_CURTAILMENT;
 
 # Load Page Forms extension
-wfLoadExtension('PageForms');
+wfLoadExtension( 'PageForms' );
 $wgPageFormsAutocompleteOnAllChars = true;
 
 # Load Semantic Result Formats extension
@@ -53,7 +59,18 @@ wfLoadExtension( 'ReplaceText' );
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 
 # Load Semantic Organization extension
-wfLoadExtension('SemanticOrganization');
+wfLoadExtension( 'SemanticOrganization' );
+
+# Load VisualEditor extension
+wfLoadExtension( 'VisualEditor' );
+wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
+$wgGroupPermissions['user']['writeapi'] = true;
+$wgSessionsInObjectCache = true;
+$wgVirtualRestConfig['modules']['parsoid'] = array(
+        'url' => "http://semorg:80/rest.php",
+        'forwardCookies' => true,
+);
+wfLoadExtension( 'VEForAll' );
 
 # Allow display titles for automatically created page names
 $wgRestrictDisplayTitle = false;

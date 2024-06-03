@@ -1,10 +1,9 @@
-version: '3.5'
-
 volumes: 
   db:
   images:
   config:
   custom:
+  elastica:
 
 services:
   db:
@@ -16,12 +15,14 @@ services:
       - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=mediawiki
       - MYSQL_USER=mediawiki
-      - MYSQL_PASSWORD=secret  
+      - MYSQL_PASSWORD=secret
+      - MARIADB_AUTO_UPGRADE=1
+      - MARIADB_INITDB_SKIP_TZINFO=1
     logging:
       options:
         max-size: 50m
 
-  web:
+  semorg:
     build: ./
     ports:
       - "8081:80"
@@ -35,7 +36,9 @@ services:
       - MEDIAWIKI_ADMIN_PASSWORD=secretpassword
       - MEDIAWIKI_NAME=Testwiki
       - MEDIAWIKI_SERVER=http://localhost:8081
-      - MEDIAWIKI_CUSTOM=true
+      - MEDIAWIKI_CUSTOM=false
+      - MEDIAWIKI_DEBUG=true
+      - MEDIAWIKI_ELASTIC=true
     volumes:
       - images:/var/www/html/images
       - config:/var/www/html/config
@@ -44,6 +47,25 @@ services:
       - ./dumps:/dumps
     depends_on:
       - db
+      - elastic
     logging:
       options:
         max-size: 50m
+
+  elastic:
+    image: elasticsearch:6.8.23
+    restart: always
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - elastica:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200

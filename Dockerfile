@@ -1,4 +1,4 @@
-FROM mediawiki:1.35
+FROM mediawiki:1.35.7
 
 # run setup as root user
 USER root
@@ -26,16 +26,26 @@ RUN apt-get update && \
     docker-php-ext-install zip && \
     docker-php-ext-install calendar
 
+# install composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
 WORKDIR /var/www/html
 
 # install skin and required extensions
 RUN git clone -b REL1_35 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
-    && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization
+    && git clone -b REL1_35 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization \
+    && git clone -b REL1_35 https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica.git /var/www/html/extensions/Elastica \
+    && git clone -b REL1_35 https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch.git /var/www/html/extensions/CirrusSearch \
+    && git clone -b REL1_35 https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll.git /var/www/html/extensions/VEForAll
 
 # change to version of PageForms that is known to be working with semorg's setup
 WORKDIR /var/www/html/extensions/PageForms
 RUN git checkout 731d226
+
+# install PHP dependencies for Elastica extension
+WORKDIR /var/www/html/extensions/Elastica
+RUN composer update --no-dev
 
 WORKDIR /var/www/html
 
@@ -43,11 +53,10 @@ WORKDIR /var/www/html
 ADD composer.local.json ./
 ADD robots.txt ./
 
-# install composer and update
-RUN wget https://getcomposer.org/composer.phar
+# update composer
 RUN chown root:root composer.json
-RUN php composer.phar config --no-interaction allow-plugins.composer/installers true
-RUN php composer.phar update --no-dev -o
+RUN composer config --no-interaction allow-plugins.composer/installers true
+RUN composer update --no-dev -o
 
 # load config templates
 RUN mkdir ./templates
@@ -65,6 +74,9 @@ RUN chmod +x /entrypoint.sh
 # add update script
 COPY update.sh /update.sh
 RUN chmod +x /update.sh
+
+# set ServerName for apache
+RUN echo "ServerName localhost" | tee /etc/apache2/conf-available/fqdn.conf && a2enconf fqdn
 
 ENTRYPOINT ["/entrypoint.sh"]
 

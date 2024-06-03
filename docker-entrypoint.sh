@@ -23,6 +23,7 @@ CONTAINER_UPDATED="UPDATED"
 CONTAINER_INSTALLED="config/INSTALLED"
 CONTAINER_1_35="config/1_35"
 EXTENSIONS="config/EXTENSIONS"
+ELASTIC_INDEX="config/ELASTIC_INDEX"
 
 if [ ! -e $CONTAINER_INSTALLED ]; then
 
@@ -40,6 +41,14 @@ fi
 echo "RESET/UPDATE LOCALSETTINGS.PHP"
 cp -a config/LocalSettings.php ./
 cp templates/config/LocalSettings.additional.template.php LocalSettings.additional.php
+
+if [ "$MEDIAWIKI_DEBUG" == 'true' ]; then
+
+    echo "ENABLE DEBUG MODE..."
+    echo "\$wgDebug = true;" >> LocalSettings.php
+
+fi
+
 echo "\$wgServer = \"$MEDIAWIKI_SERVER\";" >> LocalSettings.php
 echo "require_once('LocalSettings.additional.php');" >> LocalSettings.php
 
@@ -89,14 +98,6 @@ if [ ! ${MEDIAWIKI_EXTENSIONS:-true} == 'false' ] && [ -e $EXTENSIONS ]; then
 fi
 
 echo "require_once('config/LocalSettings.override.php');" >> LocalSettings.php
-
-if [ "$MEDIAWIKI_DEBUG" == 'true' ]; then
-
-    echo "ENABLE DEBUG MODE..."
-    echo "\$wgShowExceptionDetails = true;" >> LocalSettings.php
-    echo "\$wgShowDBErrorBacktrace = true;" >> LocalSettings.php
-
-fi
 
 if [ "$MEDIAWIKI_CUSTOM" == 'true' ]; then
 
@@ -149,12 +150,33 @@ if [ ! -e $CONTAINER_UPDATED ]; then
     php maintenance/runJobs.php
 
     echo "SETUP AUTOMYSQLBACKUP"
-    echo "USERNAME=$MYSQL_USER" >> /etc/default/automysqlbackup
+    echo -e "\nUSERNAME=$MYSQL_USER" >> /etc/default/automysqlbackup
     echo "PASSWORD=$MYSQL_PASSWORD" >> /etc/default/automysqlbackup
     sed -i "s/DBNAMES=.*/DBNAMES=mediawiki/" /etc/default/automysqlbackup
     sed -i "s/BACKUPDIR=.*/BACKUPDIR=\"\/dumps\"/" /etc/default/automysqlbackup
+    sed -i "s/DBHOST=.*/DBHOST=db/" /etc/default/automysqlbackup
 
     touch $CONTAINER_UPDATED
+
+fi
+
+if [ "$MEDIAWIKI_ELASTIC" == 'true' ]; then
+
+    echo "wfLoadExtension( 'CirrusSearch' );" >> LocalSettings.php
+    echo "wfLoadExtension( 'Elastica' );" >> LocalSettings.php
+    echo "\$wgSearchType = 'CirrusSearch';" >> LocalSettings.php
+    echo "\$wgCirrusSearchServers = [ 'elastic' ];" >> LocalSettings.php
+
+    if [ ! -e $ELASTIC_INDEX ]; then
+
+        echo "GENERATE ELASTICSEARCH INDEX"
+        php extensions/CirrusSearch/maintenance/UpdateSearchIndexConfig.php
+        php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipLinks --indexOnSkip
+        php extensions/CirrusSearch/maintenance/ForceSearchIndex.php --skipParse
+
+        touch $ELASTIC_INDEX
+
+    fi
 
 fi
 
