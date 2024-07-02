@@ -56,6 +56,9 @@ wfLoadExtension( 'SemanticResultFormats' );
 # Load Replace Text extension
 wfLoadExtension( 'ReplaceText' );
 
+# Load User Merge extension
+wfLoadExtension( 'UserMerge' );
+
 # Load SyntaxHighlight_GeSHi extension
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 

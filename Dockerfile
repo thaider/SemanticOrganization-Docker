@@ -33,13 +33,14 @@ WORKDIR /var/www/html
 RUN git clone -b REL1_39 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
     && git clone -b REL1_39 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization \
+    && git clone -b REL1_39 https://gerrit.wikimedia.org/r/mediawiki/extensions/UserMerge.git /var/www/html/extensions/UserMerge \
     && git clone -b REL1_39 https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica.git /var/www/html/extensions/Elastica \
     && git clone -b REL1_39 https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch.git /var/www/html/extensions/CirrusSearch \
     && git clone -b REL1_39 https://gerrit.wikimedia.org/r/mediawiki/extensions/VEForAll.git /var/www/html/extensions/VEForAll
 
 # change to version of PageForms that is known to be working with semorg's setup
 WORKDIR /var/www/html/extensions/PageForms
-# RUN git checkout 731d226
+RUN git checkout a171657
 
 # install PHP dependencies for Elastica extension
 WORKDIR /var/www/html/extensions/Elastica
