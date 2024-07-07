@@ -3,7 +3,7 @@ FROM mediawiki:1.39
 # run setup as root user
 USER root
 # allow running composer as superuser
-ENV COMPOSER_ALLOW_SUPERUSER = 1 
+ENV COMPOSER_ALLOW_SUPERUSER=1 
 
 # install node
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
@@ -30,7 +30,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # install skin and required extensions
-RUN git clone -b REL1_39 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
+RUN git clone -b 5.39 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
     && git clone -b REL1_39 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization \
     && git clone -b REL1_39 https://gerrit.wikimedia.org/r/mediawiki/extensions/UserMerge.git /var/www/html/extensions/UserMerge \
