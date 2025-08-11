@@ -50,7 +50,7 @@ services:
       - MEDIAWIKI_SERVER=http://localhost:8081
       - MEDIAWIKI_CUSTOM=false
       - MEDIAWIKI_DEBUG=true
-      - MEDIAWIKI_ELASTIC=true
+      - MEDIAWIKI_ELASTIC=false
     volumes:
       - images:/var/www/html/images
       - config:/var/www/html/config

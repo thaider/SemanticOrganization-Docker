@@ -5,7 +5,7 @@ cd /var/www/html
 
 CONTAINER_UPDATED="UPDATED"
 CONTAINER_INSTALLED="config/INSTALLED"
-CONTAINER_1_39="config/1_39"
+CONTAINER_1_43="config/1_43"
 EXTENSIONS="config/EXTENSIONS"
 ELASTIC_INDEX="config/ELASTIC_INDEX"
 
@@ -17,7 +17,7 @@ if [ ! -e $CONTAINER_INSTALLED ]; then
     echo "SAVE LOCALSETTINGS.PHP"
     cp -a LocalSettings.php config/
 
-    touch $CONTAINER_1_39
+    touch $CONTAINER_1_43
     touch $CONTAINER_INSTALLED
 
 fi
@@ -55,12 +55,12 @@ if [ ! ${MEDIAWIKI_EXTENSIONS:-true} == 'false' ] && [ -e $EXTENSIONS ]; then
 
             cd /var/www/html/extensions/$EXTENSION_NAME
 
-            BRANCH_EXISTS=$(git ls-remote --heads origin REL1_39)
+            BRANCH_EXISTS=$(git ls-remote --heads origin REL1_43)
 
             if [ ! -z ${BRANCH_EXISTS} ]; then
 
-                echo "CHECK OUT REL1_39"
-                git checkout REL1_39
+                echo "CHECK OUT REL1_43"
+                git checkout REL1_43
 
             fi
 
@@ -101,13 +101,13 @@ if [ "$MEDIAWIKI_CUSTOM" == 'true' ]; then
 
 fi
 
-if [ ! -e $CONTAINER_1_39 ]; then
+if [ ! -e $CONTAINER_1_43 ]; then
 
-    echo "UPDATE TO MEDIAWIKI 1.39"
+    echo "UPDATE TO MEDIAWIKI 1.43"
     php maintenance/update.php --quick
     php maintenance/runJobs.php
 
-    touch $CONTAINER_1_39
+    touch $CONTAINER_1_43
 
 fi
 
