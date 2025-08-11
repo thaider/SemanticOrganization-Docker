@@ -40,6 +40,7 @@ enableSemantics();
 $smwgEnabledEditPageHelp = false;
 $smwgPageSpecialProperties[] = '_CDAT';
 $smwgParserFeatures = $smwgParserFeatures | SMW_PARSER_LINV;
+$smwgQMaxSize = 20;
 
 # disable prefetch lookup feature while the fix for
 # https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues/4988
@@ -61,6 +62,9 @@ wfLoadExtension( 'UserMerge' );
 
 # Load SyntaxHighlight_GeSHi extension
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+
+# Load Maps extension
+wfLoadExtension( 'Maps' );
 
 # Load Semantic Organization extension
 wfLoadExtension( 'SemanticOrganization' );
