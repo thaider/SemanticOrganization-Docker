@@ -30,7 +30,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # install skin and required extensions
-RUN git clone -b 5.39 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
+RUN git clone -b 5.43 https://github.com/thaider/Tweeki /var/www/html/skins/Tweeki \
     && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/PageForms.git /var/www/html/extensions/PageForms \
     && git clone -b REL1_43 https://github.com/thaider/SemanticOrganization.git /var/www/html/extensions/SemanticOrganization \
     && git clone -b REL1_43 https://gerrit.wikimedia.org/r/mediawiki/extensions/UserMerge.git /var/www/html/extensions/UserMerge \
@@ -40,7 +40,7 @@ RUN git clone -b 5.39 https://github.com/thaider/Tweeki /var/www/html/skins/Twee
 
 # change to version of PageForms that is known to be working with semorg's setup
 WORKDIR /var/www/html/extensions/PageForms
-RUN git checkout a171657
+RUN git checkout d514e77
 
 # install PHP dependencies for Elastica extension
 WORKDIR /var/www/html/extensions/Elastica

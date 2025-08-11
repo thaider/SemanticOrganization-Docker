@@ -74,10 +74,6 @@ wfLoadExtension( 'VisualEditor' );
 wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
 $wgGroupPermissions['user']['writeapi'] = true;
 $wgSessionsInObjectCache = true;
-$wgVirtualRestConfig['modules']['parsoid'] = array(
-        'url' => "http://semorg:80/rest.php",
-        'forwardCookies' => true,
-);
 wfLoadExtension( 'VEForAll' );
 
 # Allow display titles for automatically created page names
