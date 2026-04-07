@@ -1,9 +1,9 @@
-FROM mediawiki:1.35.7
+FROM mediawiki:1.35
 
 # run setup as root user
 USER root
 # allow running composer as superuser
-ENV COMPOSER_ALLOW_SUPERUSER = 1 
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # install node
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
