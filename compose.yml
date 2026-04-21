@@ -7,7 +7,7 @@ volumes:
 
 services:
   db:
-    image: mariadb
+    image: mariadb:11.8
     restart: unless-stopped
     volumes:
       - db:/var/lib/mysql
@@ -51,6 +51,7 @@ services:
       - MEDIAWIKI_CUSTOM=false
       - MEDIAWIKI_DEBUG=true
       - MEDIAWIKI_ELASTIC=true
+      - LANG=de_DE.utf-8
     volumes:
       - images:/var/www/html/images
       - config:/var/www/html/config
