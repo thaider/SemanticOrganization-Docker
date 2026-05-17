@@ -71,7 +71,7 @@ wfLoadExtension( 'SemanticOrganization' );
 
 # Load VisualEditor extension
 wfLoadExtension( 'VisualEditor' );
-wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
+wfLoadExtension( 'Parsoid', "$IP/vendor/wikimedia/parsoid/extension.json" );
 $wgGroupPermissions['user']['writeapi'] = true;
 $wgSessionsInObjectCache = true;
 wfLoadExtension( 'VEForAll' );
