@@ -2,6 +2,6 @@
     "require": {
         "mediawiki/semantic-media-wiki": "~6.0",
         "mediawiki/semantic-result-formats": "~5.2",
-        "mediawiki/maps": "~12.0"
+        "mediawiki/maps": "~13.0"
     }
 }

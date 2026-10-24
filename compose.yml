@@ -48,7 +48,7 @@ services:
       - MEDIAWIKI_ADMIN_PASSWORD=secretpassword
       - MEDIAWIKI_NAME=Testwiki
       - MEDIAWIKI_SERVER=http://localhost:8081
-      - MEDIAWIKI_CUSTOM=false
+      - MEDIAWIKI_CUSTOM=true
       - MEDIAWIKI_DEBUG=true
       - MEDIAWIKI_ELASTIC=false
       - LANG=de_DE.utf-8

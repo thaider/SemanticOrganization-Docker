@@ -6,7 +6,7 @@ USER root
 ENV COMPOSER_ALLOW_SUPERUSER=1 
 
 # install node
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN curl -fsSL https://deb.nodesource.com/setup_26.x | bash -
 
 # install dependencies
 RUN apt-get update && \
